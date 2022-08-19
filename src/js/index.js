@@ -4,6 +4,20 @@ import $ from './utils/dom.js';
 function App() {
   this.currentPath = ['root'];
   this.nodes = [];
+  const renderNodesSection = () => {
+    $('.Nodes').innerHTML = this.nodes
+      .map((item) => {
+        return `<div class="Node" id="${item.id}">
+            <img src="./assets/${item.type.toLowerCase()}.png">
+            <div>${item.name}</div>
+          </div>`;
+      })
+      .join('');
+  };
+  const updateNodes = async (clickedNodeId) => {
+    this.nodes = await CatApi.fetchData(clickedNodeId);
+    renderNodesSection();
+  };
 
   const renderBreadcrumbSection = () => {
     $('.Breadcrumb').innerHTML = this.currentPath
@@ -27,10 +41,12 @@ function App() {
       clickedNodeId = e.target.parentNode.id;
     }
     updateCurrentPath(clickedNodeId);
+    updateNodes(clickedNodeId);
   });
 
   const init = () => {
     updateCurrentPath();
+    updateNodes();
   };
 
   init();
