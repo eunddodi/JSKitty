@@ -4,6 +4,8 @@ import $ from './utils/dom.js';
 function App() {
   this.currentPath = ['root'];
   this.nodes = [];
+  this.history = [];
+
   const renderNodesSection = () => {
     $('.Nodes').innerHTML = this.nodes
       .map((item) => {
@@ -33,6 +35,11 @@ function App() {
     renderBreadcrumbSection();
   };
 
+  const updateHistory = (clickedNodeId) => {
+    const clickedNode = this.nodes.find((item) => item.id === clickedNodeId);
+    this.history = [...this.history, clickedNode];
+  };
+
   $('.Nodes').addEventListener('click', (e) => {
     let clickedNodeId;
     if (e.target.classList.contains('Node')) {
@@ -40,6 +47,7 @@ function App() {
     } else if (e.target.parentNode.classList.contains('Node')) {
       clickedNodeId = e.target.parentNode.id;
     }
+    updateHistory(clickedNodeId);
     updateCurrentPath(clickedNodeId);
     updateNodes(clickedNodeId);
   });
