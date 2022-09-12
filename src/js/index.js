@@ -16,10 +16,6 @@ function App() {
       })
       .join('');
   };
-  const updateNodes = async (clickedNodeId) => {
-    this.nodes = await CatApi.fetchData(clickedNodeId);
-    renderNodesSection();
-  };
 
   const renderBreadcrumbSection = () => {
     $('.Breadcrumb').innerHTML = this.currentPath
@@ -27,16 +23,30 @@ function App() {
       .join('');
   };
 
-  const updateCurrentPath = (clickedNodeId) => {
-    if (clickedNodeId) {
-      const clickedNode = this.nodes.find((item) => item.id === clickedNodeId);
+  const renderImageView = (clickedNode) => {
+    $('main').insertAdjacentHTML(
+      'afterend',
+      `<div class="Modal ImageViewer">
+        <div class="content">
+          <img src="https://fe-dev-matching-2021-03-serverlessdeploymentbuck-t3kpj3way537.s3.ap-northeast-2.amazonaws.com/public${clickedNode.filePath}">
+        </div>
+      </div>`,
+    );
+  };
+
+  const updateNodes = async (clickedNodeId) => {
+    this.nodes = await CatApi.fetchData(clickedNodeId);
+    renderNodesSection();
+  };
+
+  const updateCurrentPath = (clickedNode) => {
+    if (clickedNode) {
       this.currentPath = [...this.currentPath, clickedNode.name];
     }
     renderBreadcrumbSection();
   };
 
-  const updateHistory = (clickedNodeId) => {
-    const clickedNode = this.nodes.find((item) => item.id === clickedNodeId);
+  const updateHistory = (clickedNode) => {
     this.history = [...this.history, clickedNode];
   };
 
@@ -47,9 +57,15 @@ function App() {
     } else if (e.target.parentNode.classList.contains('Node')) {
       clickedNodeId = e.target.parentNode.id;
     }
-    updateHistory(clickedNodeId);
-    updateCurrentPath(clickedNodeId);
-    updateNodes(clickedNodeId);
+
+    const clickedNode = this.nodes.find((item) => item.id === clickedNodeId);
+    if (clickedNode.type === 'DIRECTORY') {
+      updateHistory(clickedNode);
+      updateCurrentPath(clickedNode);
+      updateNodes(clickedNodeId);
+    } else if (clickedNode.type === 'FILE') {
+      renderImageView(clickedNode);
+    }
   });
 
   const init = () => {
