@@ -1,5 +1,6 @@
 import CatApi from './api/index.js';
 import Nodes from './components/Nodes.js';
+import BreadCrumb from './components/BreadCrumb.js';
 import $ from './utils/dom.js';
 
 function App() {
@@ -111,7 +112,9 @@ function App() {
 
   const init = async () => {
     await updateNodes();
+    const breadCrumb = new BreadCrumb({ $app: $('.app') });
     const nodes = new Nodes({ $parentElement: $('.Nodes') });
+    breadCrumb.setState(this.currentPath);
     nodes.setState(this.nodes);
   };
 

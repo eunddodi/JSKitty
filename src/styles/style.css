@@ -43,7 +43,7 @@ body {
   margin-bottom: 8px;
 }
 
-.Breadcrumb {
+nav {
   height: 62px;
   padding: 16px;
   border-bottom: 1px solid #ccc;
@@ -51,15 +51,15 @@ body {
   flex-direction: row;
 }
 
-.Breadcrumb > div {
+nav > div {
   padding: 4px;
 }
 
-.Breadcrumb > div::after {
+nav > div::after {
   content: ' -';
 }
 
-.Breadcrumb > div:last-child::after {
+nav > div:last-child::after {
   content: '';
 }
 
