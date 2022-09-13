@@ -1,7 +1,7 @@
-function Nodes({ $parentElement }) {
+function Nodes({ $app }) {
   this.state = [];
   this.$target = document.createElement('ul');
-  $parentElement.appendChild(this.$target);
+  $app.appendChild(this.$target);
 
   this.render = () => {
     this.$target.innerHTML = this.state

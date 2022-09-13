@@ -102,7 +102,7 @@ function App() {
     }
   };
 
-  $('.Nodes').addEventListener('click', onNodeClick);
+  // $('.Nodes').addEventListener('click', onNodeClick);
 
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
@@ -111,9 +111,10 @@ function App() {
   });
 
   const init = async () => {
+    const $app = $('.app');
     await updateNodes();
-    const breadCrumb = new BreadCrumb({ $app: $('.app') });
-    const nodes = new Nodes({ $parentElement: $('.Nodes') });
+    const breadCrumb = new BreadCrumb({ $app });
+    const nodes = new Nodes({ $app });
     breadCrumb.setState(this.currentPath);
     nodes.setState(this.nodes);
   };
