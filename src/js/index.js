@@ -23,6 +23,19 @@ function App() {
       .join('');
   };
 
+  const removeImageView = () => {
+    const $modalElement = $('.Modal');
+    $modalElement.parentNode.removeChild($modalElement);
+  };
+
+  const initEventListenerToModal = () => {
+    $('.Modal').addEventListener('click', (e) => {
+      if (e.target.classList.contains('Modal')) {
+        removeImageView();
+      }
+    });
+  };
+
   const renderImageView = (clickedNode) => {
     $('main').insertAdjacentHTML(
       'afterend',
@@ -32,6 +45,8 @@ function App() {
         </div>
       </div>`,
     );
+
+    initEventListenerToModal();
   };
 
   const updateNodes = async (clickedNodeId) => {
@@ -65,6 +80,12 @@ function App() {
       updateNodes(clickedNodeId);
     } else if (clickedNode.type === 'FILE') {
       renderImageView(clickedNode);
+    }
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      removeImageView();
     }
   });
 
