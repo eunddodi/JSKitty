@@ -6,17 +6,16 @@ function App() {
   this.nodes = [];
   this.history = [];
 
-  const goBackToPrevDir = () => {
-    updateNodes(this.history[this.history.length - 1].parent?.id);
-    this.history.pop();
-    this.currentPath.pop();
-    renderBreadcrumbSection();
+  const initEventListenerToModal = () => {
+    $('.Modal').addEventListener('click', (e) => {
+      if (e.target.classList.contains('Modal')) {
+        removeImageView();
+      }
+    });
   };
 
   const initEventListenerToPrevBtn = () => {
-    $('#prev-btn').addEventListener('click', () => {
-      goBackToPrevDir();
-    });
+    $('#prev-btn').addEventListener('click', onPrevBtnClick);
   };
 
   const renderNodesSection = () => {
@@ -40,15 +39,15 @@ function App() {
     }
   };
 
-  const updateNodes = async (clickedNodeId) => {
-    this.nodes = await CatApi.fetchData(clickedNodeId);
-    renderNodesSection();
-  };
-
   const renderBreadcrumbSection = () => {
     $('.Breadcrumb').innerHTML = this.currentPath
       .map((item) => `<div>${item}</div>`)
       .join('');
+  };
+
+  const updateNodes = async (clickedNodeId) => {
+    this.nodes = await CatApi.fetchData(clickedNodeId);
+    renderNodesSection();
   };
 
   const removeImageView = () => {
@@ -56,15 +55,21 @@ function App() {
     $modalElement.parentNode.removeChild($modalElement);
   };
 
-  const initEventListenerToModal = () => {
-    $('.Modal').addEventListener('click', (e) => {
-      if (e.target.classList.contains('Modal')) {
-        removeImageView();
-      }
-    });
+  const onPrevBtnClick = () => {
+    updateNodes(this.history[this.history.length - 1].parent?.id);
+    this.history.pop();
+    this.currentPath.pop();
+    renderBreadcrumbSection();
   };
 
-  const renderImageView = (clickedNode) => {
+  const onDirClick = (clickedNode) => {
+    updateNodes(clickedNode.id);
+    this.history = [...this.history, clickedNode];
+    this.currentPath = [...this.currentPath, clickedNode.name];
+    renderBreadcrumbSection();
+  };
+
+  const onFileClick = (clickedNode) => {
     $('main').insertAdjacentHTML(
       'afterend',
       `<div class="Modal ImageViewer">
@@ -77,18 +82,7 @@ function App() {
     initEventListenerToModal();
   };
 
-  const updateCurrentPath = (clickedNode) => {
-    if (clickedNode) {
-      this.currentPath = [...this.currentPath, clickedNode.name];
-    }
-    renderBreadcrumbSection();
-  };
-
-  const updateHistory = (clickedNode) => {
-    this.history = [...this.history, clickedNode];
-  };
-
-  $('.Nodes').addEventListener('click', (e) => {
+  const onNodeClick = (e) => {
     let clickedNodeId;
     if (e.target.classList.contains('Node')) {
       clickedNodeId = e.target.id;
@@ -97,16 +91,17 @@ function App() {
     }
 
     const clickedNode = this.nodes.find((item) => item.id === clickedNodeId);
+
     if (clickedNode) {
       if (clickedNode.type === 'DIRECTORY') {
-        updateHistory(clickedNode);
-        updateCurrentPath(clickedNode);
-        updateNodes(clickedNodeId);
+        onDirClick(clickedNode);
       } else if (clickedNode.type === 'FILE') {
-        renderImageView(clickedNode);
+        onFileClick(clickedNode);
       }
     }
-  });
+  };
+
+  $('.Nodes').addEventListener('click', onNodeClick);
 
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
@@ -115,7 +110,7 @@ function App() {
   });
 
   const init = () => {
-    updateCurrentPath();
+    renderBreadcrumbSection();
     updateNodes();
   };
 
