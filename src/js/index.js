@@ -6,6 +6,19 @@ function App() {
   this.nodes = [];
   this.history = [];
 
+  const goBackToPrevDir = () => {
+    updateNodes(this.history[this.history.length - 1].parent?.id);
+    this.history.pop();
+    this.currentPath.pop();
+    renderBreadcrumbSection();
+  };
+
+  const initEventListenerToPrevBtn = () => {
+    $('#prev-btn').addEventListener('click', () => {
+      goBackToPrevDir();
+    });
+  };
+
   const renderNodesSection = () => {
     $('.Nodes').innerHTML = this.nodes
       .map((item) => {
@@ -15,6 +28,21 @@ function App() {
           </div>`;
       })
       .join('');
+
+    if (this.history.length > 0) {
+      $('.Nodes').insertAdjacentHTML(
+        'afterbegin',
+        `<div class="Node" id="prev-btn">
+          <img src="./assets/prev.png">
+        </div>`,
+      );
+      initEventListenerToPrevBtn();
+    }
+  };
+
+  const updateNodes = async (clickedNodeId) => {
+    this.nodes = await CatApi.fetchData(clickedNodeId);
+    renderNodesSection();
   };
 
   const renderBreadcrumbSection = () => {
@@ -47,11 +75,6 @@ function App() {
     );
 
     initEventListenerToModal();
-  };
-
-  const updateNodes = async (clickedNodeId) => {
-    this.nodes = await CatApi.fetchData(clickedNodeId);
-    renderNodesSection();
   };
 
   const updateCurrentPath = (clickedNode) => {
