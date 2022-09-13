@@ -97,12 +97,14 @@ function App() {
     }
 
     const clickedNode = this.nodes.find((item) => item.id === clickedNodeId);
-    if (clickedNode.type === 'DIRECTORY') {
-      updateHistory(clickedNode);
-      updateCurrentPath(clickedNode);
-      updateNodes(clickedNodeId);
-    } else if (clickedNode.type === 'FILE') {
-      renderImageView(clickedNode);
+    if (clickedNode) {
+      if (clickedNode.type === 'DIRECTORY') {
+        updateHistory(clickedNode);
+        updateCurrentPath(clickedNode);
+        updateNodes(clickedNodeId);
+      } else if (clickedNode.type === 'FILE') {
+        renderImageView(clickedNode);
+      }
     }
   });
 
