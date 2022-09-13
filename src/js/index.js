@@ -1,4 +1,5 @@
 import CatApi from './api/index.js';
+import Nodes from './components/Nodes.js';
 import $ from './utils/dom.js';
 
 function App() {
@@ -47,7 +48,6 @@ function App() {
 
   const updateNodes = async (clickedNodeId) => {
     this.nodes = await CatApi.fetchData(clickedNodeId);
-    renderNodesSection();
   };
 
   const removeImageView = () => {
@@ -109,9 +109,10 @@ function App() {
     }
   });
 
-  const init = () => {
-    renderBreadcrumbSection();
-    updateNodes();
+  const init = async () => {
+    await updateNodes();
+    const nodes = new Nodes({ $parentElement: $('.Nodes') });
+    nodes.setState(this.nodes);
   };
 
   init();
