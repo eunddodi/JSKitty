@@ -20,35 +20,10 @@ function App() {
     $('#prev-btn').addEventListener('click', onPrevBtnClick);
   };
 
-  const renderNodesSection = () => {
-    $('.Nodes').innerHTML = this.nodes
-      .map((item) => {
-        return `<div class="Node" id="${item.id}">
-            <img src="./assets/${item.type.toLowerCase()}.png">
-            <div>${item.name}</div>
-          </div>`;
-      })
-      .join('');
-
-    if (this.history.length > 0) {
-      $('.Nodes').insertAdjacentHTML(
-        'afterbegin',
-        `<div class="Node" id="prev-btn">
-          <img src="./assets/prev.png">
-        </div>`,
-      );
-      initEventListenerToPrevBtn();
-    }
-  };
-
-  const renderBreadcrumbSection = () => {
-    $('.Breadcrumb').innerHTML = this.currentPath
-      .map((item) => `<div>${item}</div>`)
-      .join('');
-  };
-
   const updateNodes = async (clickedNodeId) => {
     this.nodes = await CatApi.fetchData(clickedNodeId);
+    breadCrumb.setState(this.currentPath);
+    nodes.setState(this.nodes);
   };
 
   const removeImageView = () => {
@@ -110,13 +85,12 @@ function App() {
     }
   });
 
+  const $app = $('.app');
+  const breadCrumb = new BreadCrumb({ $app });
+  const nodes = new Nodes({ $app });
+
   const init = async () => {
-    const $app = $('.app');
     await updateNodes();
-    const breadCrumb = new BreadCrumb({ $app });
-    const nodes = new Nodes({ $app });
-    breadCrumb.setState(this.currentPath);
-    nodes.setState(this.nodes);
   };
 
   init();
