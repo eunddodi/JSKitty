@@ -1,7 +1,19 @@
-function Nodes({ $app, initialState }) {
+function Nodes({ $app, initialState, onClick }) {
   this.state = initialState;
   this.$target = document.createElement('ul');
   $app.appendChild(this.$target);
+
+  this.onClick = onClick;
+
+  this.initEventListeners = () => {
+    this.$target.querySelectorAll('.Node').forEach(($node) => {
+      $node.addEventListener('click', (e) => {
+        const { nodeId } = e.target.dataset;
+        const selectedNode = this.state.find((node) => node.id === nodeId);
+        this.onClick(selectedNode);
+      });
+    });
+  };
 
   this.render = () => {
     const nodeTemplate = this.state.nodes
@@ -13,6 +25,7 @@ function Nodes({ $app, initialState }) {
       })
       .join('');
     this.$target.innerHTML = nodeTemplate;
+    this.initEventListeners();
   };
 
   this.setState = (nextState) => {
