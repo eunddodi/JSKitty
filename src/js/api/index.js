@@ -3,8 +3,15 @@ const BASE_URL =
 
 const CatApi = {
   async fetchData(nodeId) {
-    const res = await fetch(`${BASE_URL}/${nodeId || ''}`);
-    return res.json();
+    try {
+      const res = await fetch(`${BASE_URL}/${nodeId || ''}`);
+      if (!res.ok) {
+        throw new Error('Server Error');
+      }
+      return res.json();
+    } catch (e) {
+      throw new Error(`${e.message}`);
+    }
   },
 };
 
