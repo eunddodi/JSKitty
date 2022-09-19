@@ -1,4 +1,4 @@
-import App from './components/App';
-import $ from './utils/dom';
+import App from './components/App.js';
+import $ from './utils/dom.js';
 
 const app = new App($('.app'));

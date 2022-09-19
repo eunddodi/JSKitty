@@ -1,5 +1,6 @@
-import BreadCrumb from './BreadCrumb';
-import Nodes from './Nodes';
+import BreadCrumb from './BreadCrumb.js';
+import Nodes from './Nodes.js';
+import CatApi from '../api/index.js';
 
 function App($app) {
   this.state = {
