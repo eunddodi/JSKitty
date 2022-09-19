@@ -24,7 +24,11 @@ function Nodes({ $app, initialState, onClick }) {
           </li>`;
       })
       .join('');
-    this.$target.innerHTML = nodeTemplate;
+
+    const prevBtnTemplate = `<div class="Node"><img src="./assets/prev.png"></div>`;
+    this.$target.innerHTML = this.state.isRoot
+      ? nodeTemplate
+      : `${prevBtnTemplate}${nodeTemplate}`;
     this.initEventListeners();
   };
 
