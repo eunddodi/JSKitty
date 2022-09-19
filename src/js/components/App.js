@@ -26,6 +26,23 @@ function App($app) {
     },
     onClick: onNodeClick,
   });
+
+  this.setState = (nextState) => {
+    this.state = nextState;
+    breadcrumb.setState(this.state.path);
+    nodes.setState({ isRoot: this.state.isRoot, nodes: this.state.nodes });
+  };
+
+  const init = async () => {
+    try {
+      const rootNodes = await CatApi.fetchData();
+      this.setState({ ...this.state, isRoot: true, nodes: rootNodes });
+    } catch (e) {
+      // Error handling
+    }
+  };
+
+  init();
 }
 
 export default App;
